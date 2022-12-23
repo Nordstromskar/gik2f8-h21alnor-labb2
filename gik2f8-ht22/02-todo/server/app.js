@@ -28,7 +28,6 @@ app
   1. En route, som utgör en del av adressen/URL:en dit man kan skicka förfrågan. Man anger det som ska stå efter domän och port (vår server är konfigurerar som default att köra på localhost:5000), så här metod lyssnar man alltså efter GET-anrop till url:en localhost:5000/task
   
   Notera att route-namnen döps om i lektion 6. De ska heta tasks, inte task, men felet är enligt videorna inte tillrättat i detta skede, så jag lämnar kvar det. 
-
   2. En callbackfunktion som kommer att köras när en sådan förfrågan görs. Callbackfunktionen tar (minst) två parametrar - ett requestobjekt och ett responseobjekt, som här kallas req och res. Callbackfunktionen är asynkron för att vi använder await inuti. */
 app.get('/tasks', async (req, res) => {
   /* För enkel felhantering används try/catch */
@@ -115,7 +114,30 @@ app.delete('/tasks/:id', async (req, res) => {
 
 /***********************Labb 2 ***********************/
 /* Här skulle det vara lämpligt att skriva en funktion som likt post eller delete tar kan hantera PUT- eller PATCH-anrop (du får välja vilket, läs på om vad som verkar mest vettigt för det du ska göra) för att kunna markera uppgifter som färdiga. Den nya statusen - completed true eller falase - kan skickas i förfrågans body (req.body) tillsammans med exempelvis id så att man kan söka fram en given uppgift ur listan, uppdatera uppgiftens status och till sist spara ner listan med den uppdaterade uppgiften */
+app.patch('/pTasks/:id', async (req, res) => {
+  try{
+    const id = req.params.id;
+    const listBuffer = await fs.readFile('./tasks.json');
+    const currentTasks = JSON.parse(listBuffer);
+    let index = 0;
 
+    for (const task of currentTasks) {
+      if(task.id == id) {
+        break;
+      }
+      index = index + 1;
+    }
+    
+    currentTasks[index].completed = !currentTasks[index].completed
+
+    await fs.writeFile('./tasks.json', JSON.stringify(currentTasks));
+
+    res.send({ message: `Uppgift med id ${id} ändrades till ${currentTasks[index].completed}` });
+
+  }catch(error){
+    res.status(500).send({ error: error.stack });
+  }
+})
 /* Observera att all kod rörande backend för labb 2 ska skrivas i denna fil och inte i app.node.js. App.node.js är bara till för exempel från lektion 5 och innehåller inte någon kod som används vidare under lektionerna. */
 /***********************Labb 2 ***********************/
 

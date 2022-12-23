@@ -1,15 +1,11 @@
 /* I denna fil finns en klass för att hantera API-förfrågningar mot server (servern är det backend som skapades i lektion 5).
-
 Om ni vill starta precis denna kod måste ni först installera om node-paket och starta upp servern. Servern, såsom den ser ut i slutet av Lektion 6, finns i denna samma zip-fil. Om ni skulle köra denna kod mot backend såsom det såg ut efter Lektion 5, skulle det inte fungera, eftersom detta är koden såsom den ser ut efter Lektion 6 och några små förändringar gjordes även i servern under Lektion 6. 
-
 Gör då följande här i VS Code: 
 1. Öppna en terminal
 2. Skriv "cd 02-todo/server" (utan citattecken) och sedan enter
 3. Skriv "npm install" (utan citattecken) och sedan enter
 3. Skriv "node app.js" (utan citattecken) och enter. 
-
 Om servern startats korrekt syns nu texten "Server running on http://localhost:5000".
-
 */
 
 /* För att skapa en klass används nyckelordet class följt av klassens namn. Klasser bör ha stor inledande bokstav och döpas enligt det som kallas PascalCase. Inga parenteser används vid skapande av en klass. */
@@ -111,7 +107,14 @@ class Api {
   
   Beroende på om ni gör frontend eller backend först i labben behöver ni på något av ställena bestämma er för en av metoderna PUT eller PATCH för denna förfrågan. (Du får välja själv, läs på om vad som verkar mest vettigt för din lösning). Använder du metoden PATCH här behöver i alla fall det vara patch som tas emot i servern också, app.patch(...), och vice versa om du väljer PUT. 
   */
+  update(id, completed){
 
+    return fetch(`http://localhost:5000/pTasks/${id}`, {
+        method: 'PATCH'
+      })
+        .then((result) => result)
+        .catch((err) => console.log(err));
+}
   /*   
   För att utföra en förfrågan med hjälp av fetch() behöver servern veta några saker om förfrågan (request). Först och främst behövs en url dit förfrågan ska skickas, sedan behövs också ett objekt med inställningar och detaljer om förfrågan, detta objekt kallas vidare "{options}". Url och {options} kan sättas antingen i ett requestobjekts konstruktor; new Request(url, {options}), såsom det görs i create-metoden. Eller så skulle man kunna ange allt som annars skulle ha skickats till Request-objektets konstruktor inom parenteserna hos fetch() istället; fetch(url, {options})
   
